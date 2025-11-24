@@ -13,33 +13,39 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const mockGroupData = {
   id: "1",
-  name: "Advanced Calculus Study Group",
+  name: "Grupo de Estudo de Cálculo Avançado",
   description:
-    "Weekly study sessions for Calculus III students preparing for finals. We focus on multivariable calculus, partial derivatives, and vector calculus.",
-  category: "Mathematics",
+    "Sessões de estudo semanais para alunos de Cálculo III se preparando para as provas finais. Focamos em cálculo multivariável, derivadas parciais e cálculo vetorial.",
+  category: "Matemática",
   isPrivate: false,
   memberCount: 24,
-  createdAt: "October 15, 2024",
+  createdAt: "15 de outubro de 2024",
   members: [
-    { id: "1", name: "Sarah Johnson", course: "Mathematics", avatar: "/placeholder.svg" },
-    { id: "2", name: "Mike Chen", course: "Engineering", avatar: "/placeholder.svg" },
-    { id: "3", name: "Emily Davis", course: "Physics", avatar: "/placeholder.svg" },
-    { id: "4", name: "Alex Rivera", course: "Mathematics", avatar: "/placeholder.svg" },
+    { id: "1", name: "Sarah Johnson", course: "Matemática", avatar: "/placeholder.svg" },
+    { id: "2", name: "Mike Chen", course: "Engenharia", avatar: "/placeholder.svg" },
+    { id: "3", name: "Emily Davis", course: "Física", avatar: "/placeholder.svg" },
+    { id: "4", name: "Alex Rivera", course: "Matemática", avatar: "/placeholder.svg" },
   ],
   materials: [
     {
       id: "1",
-      title: "Calculus III Study Guide.pdf",
+      title: "Guia de Estudo Cálculo III.pdf",
       uploadedBy: "Sarah Johnson",
-      uploadedAt: "2 days ago",
+      uploadedAt: "2 dias atrás",
       type: "pdf",
     },
-    { id: "2", title: "Practice Problems Set 5", uploadedBy: "Mike Chen", uploadedAt: "3 days ago", type: "pdf" },
-    { id: "3", title: "Vector Calculus Notes", uploadedBy: "Emily Davis", uploadedAt: "1 week ago", type: "pdf" },
+    { id: "2", title: "Lista de Exercícios 5", uploadedBy: "Mike Chen", uploadedAt: "3 dias atrás", type: "pdf" },
+    {
+      id: "3",
+      title: "Notas de Cálculo Vetorial",
+      uploadedBy: "Emily Davis",
+      uploadedAt: "1 semana atrás",
+      type: "pdf",
+    },
   ],
   upcomingSessions: [
-    { id: "1", title: "Chapter 12 Review", date: "Today, 6:00 PM", location: "Library Room 204" },
-    { id: "2", title: "Practice Exam Solutions", date: "Friday, 4:00 PM", location: "Virtual (Zoom)" },
+    { id: "1", title: "Revisão Capítulo 12", date: "Hoje, 18:00", location: "Biblioteca Sala 204" },
+    { id: "2", title: "Soluções do Simulado", date: "Sexta-feira, 16:00", location: "Virtual (Zoom)" },
   ],
 }
 
@@ -49,20 +55,20 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
     {
       id: "1",
       sender: "Sarah Johnson",
-      text: "Hey everyone! Don't forget our study session today at 6 PM",
-      time: "2 hours ago",
+      text: "Olá pessoal! Não esqueçam nossa sessão de estudo hoje às 18h",
+      time: "2 horas atrás",
     },
     {
       id: "2",
       sender: "Mike Chen",
-      text: "I'll be there! Can someone help me with problem 5 from the homework?",
-      time: "1 hour ago",
+      text: "Estarei lá! Alguém pode me ajudar com o problema 5 da tarefa?",
+      time: "1 hora atrás",
     },
     {
       id: "3",
       sender: "Emily Davis",
-      text: "Sure Mike! I solved that one. We can go over it together",
-      time: "30 minutes ago",
+      text: "Claro Mike! Eu resolvi esse. Podemos revisar juntos",
+      time: "30 minutos atrás",
     },
   ])
 
@@ -74,9 +80,9 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
       ...messages,
       {
         id: String(messages.length + 1),
-        sender: "You",
+        sender: "Você",
         text: messageText,
-        time: "Just now",
+        time: "Agora mesmo",
       },
     ])
     setMessageText("")
@@ -89,7 +95,7 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-3xl font-bold text-gray-900">{mockGroupData.name}</h1>
+              <h1 className="text-3xl font-bold text-gray-100">{mockGroupData.name}</h1>
               {mockGroupData.isPrivate && (
                 <Badge variant="secondary">
                   <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,12 +106,12 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
                       d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                     />
                   </svg>
-                  Private
+                  Privado
                 </Badge>
               )}
             </div>
-            <p className="text-gray-600 mb-3">{mockGroupData.description}</p>
-            <div className="flex items-center gap-4 text-sm text-gray-600">
+            <p className="text-gray-400 mb-3">{mockGroupData.description}</p>
+            <div className="flex items-center gap-4 text-sm text-gray-400">
               <div className="flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -115,10 +121,10 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
                     d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                   />
                 </svg>
-                {mockGroupData.memberCount} members
+                {mockGroupData.memberCount} membros
               </div>
               <Badge variant="outline">{mockGroupData.category}</Badge>
-              <span>Created {mockGroupData.createdAt}</span>
+              <span>Criado em {mockGroupData.createdAt}</span>
             </div>
           </div>
           <Button variant="outline">
@@ -131,39 +137,39 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
               />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            Settings
+            Configurações
           </Button>
         </div>
 
         <Tabs defaultValue="chat" className="w-full">
           <TabsList>
             <TabsTrigger value="chat">Chat</TabsTrigger>
-            <TabsTrigger value="materials">Materials</TabsTrigger>
-            <TabsTrigger value="sessions">Sessions</TabsTrigger>
-            <TabsTrigger value="members">Members</TabsTrigger>
+            <TabsTrigger value="materials">Materiais</TabsTrigger>
+            <TabsTrigger value="sessions">Sessões</TabsTrigger>
+            <TabsTrigger value="members">Membros</TabsTrigger>
           </TabsList>
 
           {/* Chat Tab */}
           <TabsContent value="chat" className="space-y-4">
             <Card className="h-[500px] flex flex-col">
               <CardHeader className="border-b">
-                <CardTitle>Group Chat</CardTitle>
-                <CardDescription>Communicate with group members in real-time</CardDescription>
+                <CardTitle>Chat do Grupo</CardTitle>
+                <CardDescription>Comunique-se com os membros do grupo em tempo real</CardDescription>
               </CardHeader>
               <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
                 {messages.map((message) => (
                   <div key={message.id} className="flex gap-3">
                     <Avatar className="w-8 h-8">
-                      <AvatarFallback className="bg-blue-600 text-white text-sm">
+                      <AvatarFallback className="bg-teal-600 text-white text-sm">
                         {message.sender.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
                       <div className="flex items-baseline gap-2">
-                        <span className="font-medium text-sm">{message.sender}</span>
+                        <span className="font-medium text-sm text-gray-100">{message.sender}</span>
                         <span className="text-xs text-gray-500">{message.time}</span>
                       </div>
-                      <p className="text-sm text-gray-700 mt-1">{message.text}</p>
+                      <p className="text-sm text-gray-300 mt-1">{message.text}</p>
                     </div>
                   </div>
                 ))}
@@ -171,12 +177,12 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
               <div className="border-t p-4">
                 <form onSubmit={handleSendMessage} className="flex gap-2">
                   <Input
-                    placeholder="Type your message..."
+                    placeholder="Digite sua mensagem..."
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
                   />
-                  <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
-                    Send
+                  <Button type="submit" className="bg-teal-600 hover:bg-teal-700 text-white">
+                    Enviar
                   </Button>
                 </form>
               </div>
@@ -188,14 +194,14 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle>Shared Materials</CardTitle>
-                  <CardDescription>Files and resources shared by group members</CardDescription>
+                  <CardTitle>Materiais Compartilhados</CardTitle>
+                  <CardDescription>Arquivos e recursos compartilhados pelos membros do grupo</CardDescription>
                 </div>
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button className="bg-teal-600 hover:bg-teal-700 text-white">
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
-                  Upload
+                  Enviar
                 </Button>
               </CardHeader>
               <CardContent>
@@ -203,11 +209,11 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
                   {mockGroupData.materials.map((material) => (
                     <div
                       key={material.id}
-                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+                      className="flex items-center justify-between p-4 border border-gray-700 rounded-lg hover:bg-gray-800"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                          <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-10 h-10 bg-red-900/30 rounded-lg flex items-center justify-center">
+                          <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -217,9 +223,9 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
                           </svg>
                         </div>
                         <div>
-                          <p className="font-medium text-sm">{material.title}</p>
+                          <p className="font-medium text-sm text-gray-100">{material.title}</p>
                           <p className="text-xs text-gray-500">
-                            Uploaded by {material.uploadedBy} • {material.uploadedAt}
+                            Enviado por {material.uploadedBy} • {material.uploadedAt}
                           </p>
                         </div>
                       </div>
@@ -245,24 +251,27 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle>Study Sessions</CardTitle>
-                  <CardDescription>Scheduled meetings and study sessions</CardDescription>
+                  <CardTitle>Sessões de Estudo</CardTitle>
+                  <CardDescription>Reuniões e sessões de estudo agendadas</CardDescription>
                 </div>
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button className="bg-teal-600 hover:bg-teal-700 text-white">
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
-                  Schedule Session
+                  Agendar Sessão
                 </Button>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   {mockGroupData.upcomingSessions.map((session) => (
-                    <div key={session.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={session.id}
+                      className="flex items-center justify-between p-4 border border-gray-700 rounded-lg"
+                    >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                        <div className="w-10 h-10 bg-indigo-900/30 rounded-lg flex items-center justify-center">
                           <svg
-                            className="w-5 h-5 text-indigo-600"
+                            className="w-5 h-5 text-indigo-400"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -276,14 +285,14 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
                           </svg>
                         </div>
                         <div>
-                          <p className="font-medium text-sm">{session.title}</p>
+                          <p className="font-medium text-sm text-gray-100">{session.title}</p>
                           <p className="text-xs text-gray-500">
                             {session.date} • {session.location}
                           </p>
                         </div>
                       </div>
                       <Button variant="outline" size="sm">
-                        View Details
+                        Ver Detalhes
                       </Button>
                     </div>
                   ))}
@@ -296,19 +305,19 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
           <TabsContent value="members" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Group Members ({mockGroupData.memberCount})</CardTitle>
-                <CardDescription>Students participating in this study group</CardDescription>
+                <CardTitle>Membros do Grupo ({mockGroupData.memberCount})</CardTitle>
+                <CardDescription>Estudantes participando deste grupo de estudo</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid sm:grid-cols-2 gap-4">
                   {mockGroupData.members.map((member) => (
-                    <div key={member.id} className="flex items-center gap-3 p-4 border rounded-lg">
+                    <div key={member.id} className="flex items-center gap-3 p-4 border border-gray-700 rounded-lg">
                       <Avatar>
                         <AvatarImage src={member.avatar || "/placeholder.svg"} />
-                        <AvatarFallback className="bg-blue-600 text-white">{member.name.charAt(0)}</AvatarFallback>
+                        <AvatarFallback className="bg-teal-600 text-white">{member.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
-                        <p className="font-medium text-sm">{member.name}</p>
+                        <p className="font-medium text-sm text-gray-100">{member.name}</p>
                         <p className="text-xs text-gray-500">{member.course}</p>
                       </div>
                       <Button variant="ghost" size="sm">
