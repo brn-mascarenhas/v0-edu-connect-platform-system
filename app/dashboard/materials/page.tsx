@@ -381,17 +381,29 @@ export default function MaterialsPage() {
 }
 
 function UploadMaterialModal({ onClose }: { onClose: () => void }) {
+  const [uploadMethod, setUploadMethod] = useState<"file" | "drive" | "link">("file")
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     category: "",
     difficulty: "",
+    externalLink: "",
   })
+  const [isConnectingDrive, setIsConnectingDrive] = useState(false)
+  const [isDriveConnected, setIsDriveConnected] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     await new Promise((resolve) => setTimeout(resolve, 1000))
     onClose()
+  }
+
+  const handleConnectDrive = async () => {
+    setIsConnectingDrive(true)
+    // Simular conexão com Google Drive
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+    setIsDriveConnected(true)
+    setIsConnectingDrive(false)
   }
 
   return (
@@ -402,95 +414,349 @@ function UploadMaterialModal({ onClose }: { onClose: () => void }) {
           <CardDescription>Compartilhe suas notas, documentos ou recursos com outros estudantes</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Upload de Arquivo</label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer">
-                <svg
-                  className="w-12 h-12 mx-auto text-gray-400 mb-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-4">
+              <div className="flex gap-2 border-b border-gray-700">
+                <button
+                  type="button"
+                  onClick={() => setUploadMethod("file")}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    uploadMethod === "file"
+                      ? "text-teal-400 border-b-2 border-teal-400"
+                      : "text-gray-400 hover:text-gray-300"
+                  }`}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                  />
-                </svg>
-                <p className="text-sm text-gray-600 mb-1">Clique para fazer upload ou arraste e solte</p>
-                <p className="text-xs text-gray-500">PDF, DOC, PPT ou ZIP (máx 50MB)</p>
-                <input type="file" className="hidden" />
+                  <svg className="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                    />
+                  </svg>
+                  Upload de Arquivo
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUploadMethod("drive")}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    uploadMethod === "drive"
+                      ? "text-teal-400 border-b-2 border-teal-400"
+                      : "text-gray-400 hover:text-gray-300"
+                  }`}
+                >
+                  <svg className="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+                    />
+                  </svg>
+                  Google Drive
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUploadMethod("link")}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    uploadMethod === "link"
+                      ? "text-teal-400 border-b-2 border-teal-400"
+                      : "text-gray-400 hover:text-gray-300"
+                  }`}
+                >
+                  <svg className="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                    />
+                  </svg>
+                  Link Externo
+                </button>
               </div>
+
+              {/* Upload de Arquivo */}
+              {uploadMethod === "file" && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-300">Selecione o arquivo</label>
+                  <div className="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center hover:border-teal-500 transition-colors cursor-pointer bg-gray-800/30">
+                    <svg
+                      className="w-12 h-12 mx-auto text-gray-500 mb-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      />
+                    </svg>
+                    <p className="text-sm text-gray-300 mb-1">Clique para fazer upload ou arraste e solte</p>
+                    <p className="text-xs text-gray-500">PDF, DOC, PPT, XLSX ou ZIP (máx 50MB)</p>
+                    <input type="file" className="hidden" accept=".pdf,.doc,.docx,.ppt,.pptx,.xlsx,.zip" />
+                  </div>
+                </div>
+              )}
+
+              {/* Google Drive */}
+              {uploadMethod === "drive" && (
+                <div className="space-y-4">
+                  <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6 text-center">
+                    {!isDriveConnected ? (
+                      <>
+                        <svg
+                          className="w-16 h-16 mx-auto text-blue-500 mb-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+                          />
+                        </svg>
+                        <h3 className="text-lg font-medium text-gray-200 mb-2">Conectar ao Google Drive</h3>
+                        <p className="text-sm text-gray-400 mb-4">
+                          Importe arquivos diretamente da sua conta do Google Drive
+                        </p>
+                        <Button
+                          type="button"
+                          onClick={handleConnectDrive}
+                          disabled={isConnectingDrive}
+                          className="bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                          {isConnectingDrive ? (
+                            <>
+                              <svg
+                                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                />
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                />
+                              </svg>
+                              Conectando...
+                            </>
+                          ) : (
+                            <>
+                              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                                />
+                              </svg>
+                              Conectar com Google Drive
+                            </>
+                          )}
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-12 h-12 mx-auto text-green-500 mb-3" fill="none" viewBox="0 0 24 24">
+                          <path
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        <h3 className="text-lg font-medium text-gray-200 mb-2">Conectado ao Google Drive</h3>
+                        <p className="text-sm text-gray-400 mb-4">Selecione um arquivo para importar</p>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 cursor-pointer border border-gray-600">
+                            <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                              />
+                            </svg>
+                            <div className="flex-1 text-left">
+                              <p className="text-sm font-medium text-gray-200">Notas de Cálculo.pdf</p>
+                              <p className="text-xs text-gray-500">2.3 MB</p>
+                            </div>
+                            <input type="radio" name="drive-file" className="w-4 h-4" />
+                          </div>
+                          <div className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 cursor-pointer border border-gray-600">
+                            <svg
+                              className="w-8 h-8 text-blue-500"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                              />
+                            </svg>
+                            <div className="flex-1 text-left">
+                              <p className="text-sm font-medium text-gray-200">Slides Apresentação.pptx</p>
+                              <p className="text-xs text-gray-500">5.1 MB</p>
+                            </div>
+                            <input type="radio" name="drive-file" className="w-4 h-4" />
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Link Externo (YouTube/Dropbox) */}
+              {uploadMethod === "link" && (
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-300">Cole o link do recurso</label>
+                    <Input
+                      type="url"
+                      placeholder="https://www.youtube.com/watch?v=... ou https://www.dropbox.com/..."
+                      value={formData.externalLink}
+                      onChange={(e) => setFormData({ ...formData, externalLink: e.target.value })}
+                      className="bg-gray-800 border-gray-600"
+                    />
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      <div className="flex items-center gap-2 px-3 py-2 bg-red-900/20 border border-red-800 rounded-lg">
+                        <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                        </svg>
+                        <span className="text-xs text-gray-300">YouTube</span>
+                      </div>
+                      <div className="flex items-center gap-2 px-3 py-2 bg-blue-900/20 border border-blue-800 rounded-lg">
+                        <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 9.75l-6.562 6.562-1.72-1.72 4.843-4.843-4.844-4.843 1.72-1.72 6.563 6.564z" />
+                        </svg>
+                        <span className="text-xs text-gray-300">Dropbox</span>
+                      </div>
+                      <div className="flex items-center gap-2 px-3 py-2 bg-purple-900/20 border border-purple-800 rounded-lg">
+                        <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                          />
+                        </svg>
+                        <span className="text-xs text-gray-300">Outros Links</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-blue-900/20 border border-blue-800 rounded-lg p-4">
+                    <div className="flex gap-3">
+                      <svg className="w-5 h-5 text-blue-400 flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <div className="text-sm text-blue-300">
+                        <p className="font-medium mb-1">Plataformas suportadas:</p>
+                        <ul className="text-xs space-y-1 text-blue-400">
+                          <li>• YouTube (vídeos e playlists)</li>
+                          <li>• Dropbox (arquivos compartilhados)</li>
+                          <li>• Google Drive (links públicos)</li>
+                          <li>• OneDrive (links compartilhados)</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Título</label>
-              <Input
-                placeholder="e.g., Notas Completas de Álgebra Linear"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Descrição</label>
-              <textarea
-                className="w-full min-h-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Descreva o que esse material abrange..."
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                required
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
+            {/* Restante do formulário */}
+            <div className="space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Categoria</label>
-                <Select
-                  value={formData.category}
-                  onValueChange={(value) => setFormData({ ...formData, category: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecionar..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Matemática">Matemática</SelectItem>
-                    <SelectItem value="Ciência da Computação">Ciência da Computação</SelectItem>
-                    <SelectItem value="Química">Química</SelectItem>
-                    <SelectItem value="Física">Física</SelectItem>
-                    <SelectItem value="Idiomas">Idiomas</SelectItem>
-                  </SelectContent>
-                </Select>
+                <label className="text-sm font-medium">Título</label>
+                <Input
+                  placeholder="e.g., Notas Completas de Álgebra Linear"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  required
+                />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Dificuldade</label>
-                <Select
-                  value={formData.difficulty}
-                  onValueChange={(value) => setFormData({ ...formData, difficulty: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecionar..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Iniciante">Iniciante</SelectItem>
-                    <SelectItem value="Intermediário">Intermediário</SelectItem>
-                    <SelectItem value="Avançado">Avançado</SelectItem>
-                  </SelectContent>
-                </Select>
+                <label className="text-sm font-medium">Descrição</label>
+                <textarea
+                  className="w-full min-h-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Descreva o que esse material abrange..."
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  required
+                />
               </div>
-            </div>
 
-            <div className="flex gap-3 pt-4">
-              <Button type="button" variant="outline" onClick={onClose} className="flex-1 bg-transparent">
-                Cancelar
-              </Button>
-              <Button type="submit" className="flex-1 bg-teal-600 hover:bg-teal-700 text-white">
-                Enviar Material
-              </Button>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Categoria</label>
+                  <Select
+                    value={formData.category}
+                    onValueChange={(value) => setFormData({ ...formData, category: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecionar..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Matemática">Matemática</SelectItem>
+                      <SelectItem value="Ciência da Computação">Ciência da Computação</SelectItem>
+                      <SelectItem value="Química">Química</SelectItem>
+                      <SelectItem value="Física">Física</SelectItem>
+                      <SelectItem value="Idiomas">Idiomas</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Dificuldade</label>
+                  <Select
+                    value={formData.difficulty}
+                    onValueChange={(value) => setFormData({ ...formData, difficulty: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecionar..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Iniciante">Iniciante</SelectItem>
+                      <SelectItem value="Intermediário">Intermediário</SelectItem>
+                      <SelectItem value="Avançado">Avançado</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <Button type="button" variant="outline" onClick={onClose} className="flex-1 bg-transparent">
+                  Cancelar
+                </Button>
+                <Button type="submit" className="flex-1 bg-teal-600 hover:bg-teal-700 text-white">
+                  Enviar Material
+                </Button>
+              </div>
             </div>
           </form>
         </CardContent>

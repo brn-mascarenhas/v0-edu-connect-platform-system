@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import Link from "next/link"
 
 import { useState } from "react"
 import { DashboardLayout } from "@/components/dashboard-layout"
@@ -10,6 +11,8 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 const mockGroupData = {
   id: "1",
@@ -72,6 +75,15 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
     },
   ])
 
+  const [showScheduleModal, setShowScheduleModal] = useState(false)
+  const [inCall, setInCall] = useState(false)
+  const [sessionForm, setSessionForm] = useState({
+    title: "",
+    date: "",
+    time: "",
+    location: "",
+  })
+
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault()
     if (!messageText.trim()) return
@@ -86,6 +98,17 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
       },
     ])
     setMessageText("")
+  }
+
+  const handleScheduleSession = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log("Nova sessão agendada:", sessionForm)
+    setShowScheduleModal(false)
+    setSessionForm({ title: "", date: "", time: "", location: "" })
+  }
+
+  const toggleCall = () => {
+    setInCall(!inCall)
   }
 
   return (
@@ -127,19 +150,105 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
               <span>Criado em {mockGroupData.createdAt}</span>
             </div>
           </div>
-          <Button variant="outline">
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-              />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            Configurações
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={toggleCall}
+              className={inCall ? "bg-red-600 hover:bg-red-700 text-white" : "bg-teal-600 hover:bg-teal-700 text-white"}
+            >
+              {inCall ? (
+                <>
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 8l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M5 3a2 2 0 00-2 2v1c0 8.284 6.716 15 15 15h1a2 2 0 002-2v-3.28a1 1 0 00-.684-.948l-4.493-1.498a1 1 0 00-1.21.502l-1.13 2.257a11.042 11.042 0 01-5.516-5.517l2.257-1.128a1 1 0 00.502-1.21L9.228 3.683A1 1 0 008.279 3H5z"
+                    />
+                  </svg>
+                  Encerrar Chamada
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                    />
+                  </svg>
+                  Iniciar Chamada
+                </>
+              )}
+            </Button>
+            <Button variant="outline">
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+              Configurações
+            </Button>
+          </div>
         </div>
+
+        {inCall && (
+          <Card className="bg-teal-900/30 border-teal-600">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+                  <span className="text-gray-100 font-medium">Chamada em andamento</span>
+                  <span className="text-gray-400 text-sm">3 participantes</span>
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm">
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                      />
+                    </svg>
+                    Microfone
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                      />
+                    </svg>
+                    Câmera
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                      />
+                    </svg>
+                    Compartilhar
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <Tabs defaultValue="chat" className="w-full">
           <TabsList>
@@ -254,7 +363,7 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
                   <CardTitle>Sessões de Estudo</CardTitle>
                   <CardDescription>Reuniões e sessões de estudo agendadas</CardDescription>
                 </div>
-                <Button className="bg-teal-600 hover:bg-teal-700 text-white">
+                <Button onClick={() => setShowScheduleModal(true)} className="bg-teal-600 hover:bg-teal-700 text-white">
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
@@ -312,24 +421,32 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
                 <div className="grid sm:grid-cols-2 gap-4">
                   {mockGroupData.members.map((member) => (
                     <div key={member.id} className="flex items-center gap-3 p-4 border border-gray-700 rounded-lg">
-                      <Avatar>
-                        <AvatarImage src={member.avatar || "/placeholder.svg"} />
-                        <AvatarFallback className="bg-teal-600 text-white">{member.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
+                      <Link href={`/dashboard/users/${member.id}`}>
+                        <Avatar className="cursor-pointer hover:ring-2 hover:ring-teal-500 transition-all">
+                          <AvatarImage src={member.avatar || "/placeholder.svg"} />
+                          <AvatarFallback className="bg-teal-600 text-white">{member.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                      </Link>
                       <div className="flex-1">
-                        <p className="font-medium text-sm text-gray-100">{member.name}</p>
+                        <Link href={`/dashboard/users/${member.id}`}>
+                          <p className="font-medium text-sm text-gray-100 hover:text-teal-400 cursor-pointer transition-colors">
+                            {member.name}
+                          </p>
+                        </Link>
                         <p className="text-xs text-gray-500">{member.course}</p>
                       </div>
-                      <Button variant="ghost" size="sm">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                          />
-                        </svg>
-                      </Button>
+                      <Link href={`/dashboard/users/${member.id}`}>
+                        <Button variant="ghost" size="sm">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                            />
+                          </svg>
+                        </Button>
+                      </Link>
                     </div>
                   ))}
                 </div>
@@ -337,6 +454,123 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
             </Card>
           </TabsContent>
         </Tabs>
+
+        {showScheduleModal && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-900 border border-gray-700 rounded-lg w-full max-w-md">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-gray-100">Agendar Nova Sessão</h2>
+                  <button
+                    onClick={() => setShowScheduleModal(false)}
+                    className="text-gray-400 hover:text-gray-200 transition-colors"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                <form onSubmit={handleScheduleSession} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="title" className="text-gray-200">
+                      Título da Sessão
+                    </Label>
+                    <Input
+                      id="title"
+                      placeholder="Ex: Revisão de Cálculo III"
+                      value={sessionForm.title}
+                      onChange={(e) => setSessionForm({ ...sessionForm, title: e.target.value })}
+                      required
+                      className="bg-gray-800 border-gray-700 text-gray-100"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="date" className="text-gray-200">
+                        Data
+                      </Label>
+                      <Input
+                        id="date"
+                        type="date"
+                        value={sessionForm.date}
+                        onChange={(e) => setSessionForm({ ...sessionForm, date: e.target.value })}
+                        required
+                        className="bg-gray-800 border-gray-700 text-gray-100"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="time" className="text-gray-200">
+                        Horário
+                      </Label>
+                      <Input
+                        id="time"
+                        type="time"
+                        value={sessionForm.time}
+                        onChange={(e) => setSessionForm({ ...sessionForm, time: e.target.value })}
+                        required
+                        className="bg-gray-800 border-gray-700 text-gray-100"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="location" className="text-gray-200">
+                      Local / Plataforma
+                    </Label>
+                    <Select
+                      value={sessionForm.location}
+                      onValueChange={(value) => setSessionForm({ ...sessionForm, location: value })}
+                      required
+                    >
+                      <SelectTrigger className="bg-gray-800 border-gray-700 text-gray-100">
+                        <SelectValue placeholder="Selecione o local" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-800 border-gray-700">
+                        <SelectItem value="zoom" className="text-gray-100">
+                          Virtual (Zoom)
+                        </SelectItem>
+                        <SelectItem value="meet" className="text-gray-100">
+                          Virtual (Google Meet)
+                        </SelectItem>
+                        <SelectItem value="teams" className="text-gray-100">
+                          Virtual (Microsoft Teams)
+                        </SelectItem>
+                        <SelectItem value="biblioteca" className="text-gray-100">
+                          Biblioteca - Sala de Estudo
+                        </SelectItem>
+                        <SelectItem value="sala204" className="text-gray-100">
+                          Biblioteca - Sala 204
+                        </SelectItem>
+                        <SelectItem value="laboratorio" className="text-gray-100">
+                          Laboratório de Informática
+                        </SelectItem>
+                        <SelectItem value="outro" className="text-gray-100">
+                          Outro local
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowScheduleModal(false)}
+                      className="flex-1"
+                    >
+                      Cancelar
+                    </Button>
+                    <Button type="submit" className="flex-1 bg-teal-600 hover:bg-teal-700 text-white">
+                      Agendar
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   )

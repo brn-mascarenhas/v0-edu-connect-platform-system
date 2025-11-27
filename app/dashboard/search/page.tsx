@@ -359,19 +359,29 @@ export default function SearchPage() {
                       <Card key={user.id}>
                         <CardContent className="pt-6">
                           <div className="flex items-start gap-3">
-                            <Avatar className="w-12 h-12">
-                              <AvatarImage src="/placeholder.svg" />
-                              <AvatarFallback className="bg-blue-600 text-white">{user.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
+                            <Link href={`/dashboard/users/${user.id}`}>
+                              <Avatar className="w-12 h-12 cursor-pointer hover:ring-2 hover:ring-teal-500 transition-all">
+                                <AvatarImage src="/placeholder.svg" />
+                                <AvatarFallback className="bg-teal-600 text-white">
+                                  {user.name.charAt(0)}
+                                </AvatarFallback>
+                              </Avatar>
+                            </Link>
                             <div className="flex-1">
-                              <h4 className="font-semibold">{user.name}</h4>
-                              <p className="text-sm text-gray-600">
+                              <Link href={`/dashboard/users/${user.id}`}>
+                                <h4 className="font-semibold text-gray-100 hover:text-teal-400 cursor-pointer transition-colors">
+                                  {user.name}
+                                </h4>
+                              </Link>
+                              <p className="text-sm text-gray-400">
                                 {user.course} • {user.university}
                               </p>
-                              <p className="text-sm text-gray-500 mt-2">{user.bio}</p>
-                              <Button variant="outline" size="sm" className="mt-3 bg-transparent">
-                                Connect
-                              </Button>
+                              <p className="text-sm text-gray-400 mt-2">{user.bio}</p>
+                              <Link href={`/dashboard/users/${user.id}`}>
+                                <Button variant="outline" size="sm" className="mt-3 bg-transparent">
+                                  Ver Perfil
+                                </Button>
+                              </Link>
                             </div>
                           </div>
                         </CardContent>
@@ -502,19 +512,27 @@ export default function SearchPage() {
                   <Card key={user.id}>
                     <CardContent className="pt-6">
                       <div className="flex items-start gap-3">
-                        <Avatar className="w-12 h-12">
-                          <AvatarImage src="/placeholder.svg" />
-                          <AvatarFallback className="bg-blue-600 text-white">{user.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
+                        <Link href={`/dashboard/users/${user.id}`}>
+                          <Avatar className="w-12 h-12 cursor-pointer hover:ring-2 hover:ring-teal-500 transition-all">
+                            <AvatarImage src="/placeholder.svg" />
+                            <AvatarFallback className="bg-teal-600 text-white">{user.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                        </Link>
                         <div className="flex-1">
-                          <h4 className="font-semibold">{user.name}</h4>
-                          <p className="text-sm text-gray-600">
+                          <Link href={`/dashboard/users/${user.id}`}>
+                            <h4 className="font-semibold text-gray-100 hover:text-teal-400 cursor-pointer transition-colors">
+                              {user.name}
+                            </h4>
+                          </Link>
+                          <p className="text-sm text-gray-400">
                             {user.course} • {user.university}
                           </p>
-                          <p className="text-sm text-gray-500 mt-2">{user.bio}</p>
-                          <Button variant="outline" size="sm" className="mt-3 bg-transparent">
-                            Connect
-                          </Button>
+                          <p className="text-sm text-gray-400 mt-2">{user.bio}</p>
+                          <Link href={`/dashboard/users/${user.id}`}>
+                            <Button variant="outline" size="sm" className="mt-3 bg-transparent">
+                              Ver Perfil
+                            </Button>
+                          </Link>
                         </div>
                       </div>
                     </CardContent>
